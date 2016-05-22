@@ -61,6 +61,7 @@ public class Market {
 		System.out.println("\t6.Customer Login");
 		System.out.println("\t7.Staff Options");
 		System.out.println("\t8.Confirm shopping");
+		System.out.println("\t9.Show Your Current Points and Balance");
 		System.out.println("\t0.Exit");
 	}
 	
@@ -75,6 +76,14 @@ public class Market {
 		System.out.println("\t7.Print Current Sale Report");
 		System.out.println("\t9.Edit Product Details");
 		System.out.println("\t0.Back To Last Menu");
+	}
+	
+	public void custInfo(){
+		if(customer!=null){
+			System.out.println("Your current points: "+customer.getValidPoint());
+			System.out.println("Your current balance: "+customer.getBalance());
+		}
+		else System.out.println("Please login as customer first!");
 	}
 	
 	public void recharge(){
@@ -205,7 +214,16 @@ public class Market {
 			String ch=scan.next();
 			if(ch.compareTo("Y")==0||ch.compareTo("y")==0){
 				this.sale.realTotalPrice(customer);
-				System.out.println("Total price: "+sale.getTotalPrice());
+				if(customer.getBalance()>this.sale.realTP){
+					System.out.println("Total price: "+sale.getTotalPrice());
+					customer.setBalance(customer.getBalance()-this.sale.realTP);
+				}
+				else{
+					System.out.println("Your balance is not enough, please recharge at first.");
+				}
+			}else{
+				sales.remove(sales.get(sales.size()-1));
+				this.sale=null;
 			}
 		}
 	}
@@ -242,7 +260,7 @@ public class Market {
 	public void edit(){
 		if(employee instanceof Manager){
 			System.out.println("Please choose what you want to edit");
-			System.out.println("1.Edit Product Price");
+			System.out.println("1.Edit Product Item Price");
 			System.out.println("2.Edit Product Discount Rate");
 			System.out.println("3.Set Product Whole Sale Quantity");
 			System.out.println("4.Set Product Whole Sale Price");
@@ -327,7 +345,7 @@ public class Market {
 		for(int i=0;i<sales.size();i++){
 		if((Math.floor(sales.get(i).ID/1000)>=startdate)&&(Math.floor(sales.get(i).ID)<=enddate))
 		{
-			System.out.println("Sale " + (i + 1));
+			System.out.println("Sale " + (i+1));
 	          sales.get(i).print();
 	         partialRevenue+=sales.get(i).realTP;
 			salesnum+=1;
@@ -413,7 +431,6 @@ public class Market {
 					}
 				}
 				break;
-			case 8 : confirm();break;
 			case 7 : 
 				do{
 					System.out.println();
@@ -436,6 +453,8 @@ public class Market {
 					}
 					System.out.println();
 				}while(n!=0);
+			case 8 : confirm();break;
+			case 9 : custInfo();break;
 				case 0 : break;
 				}
 			System.out.println();
