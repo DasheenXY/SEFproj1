@@ -11,9 +11,11 @@ public class Market {
 	private Product product=null;
 	private Customer customer=null;
 	private Sale sale=null;
+	private double max=0;
 	
 	Market(){
 		custs.add(new Customer("Ashley",1,100));
+		custs.add(new Customer("Oliver",2,0));
 		emps.add(new Manager("Shaun","1","pass"));
 		emps.add(new WarehouseStaff("Ray","007","pass"));
 		emps.add(new SalesStaff("Bob","3","pass"));
@@ -55,8 +57,10 @@ public class Market {
 		System.out.println("\t2.Search Product");
 		System.out.println("\t3.Search Unit Price In Bulk");
 		System.out.println("\t4.Purchase Products(Shopping)");
-		System.out.println("\t5.Customer Login");
-		System.out.println("\t6.Staff Options");
+		System.out.println("\t5.Show Shopping List");
+		System.out.println("\t6.Customer Login");
+		System.out.println("\t7.Staff Options");
+		System.out.println("\t8.Confirm shopping");
 		System.out.println("\t0.Exit");
 	}
 	
@@ -64,7 +68,7 @@ public class Market {
 		System.out.println("\t===Staff Operation System===");
 		System.out.println("\t1.Show Products' Number On Shelve");
 		System.out.println("\t2.Show Products' Number In Warehouse");
-		System.out.println("\t3.Remove Items");
+		System.out.println("\t3.Remove Buying Items");
 		System.out.println("\t4.Cancellation");
 		System.out.println("\t5.Add Shelf Level");
 		System.out.println("\t6.Set Replenish Stoke Level On Shelve");
@@ -118,22 +122,22 @@ public class Market {
 	
 	public void purchase(){
 		if(customer!=null){
-			System.out.print("Enter the product ID you want to purchse : ");
-//			int i=scan.nextInt();
-//			for(int j=0;j<prods.size();j++){
-//				if(i<=prods.size()&&i!=0){
-//					this.product=prods.get(i-1);
-//				}else System.out.println("Invalid Product ID, Please Enter Again.");
-//			}
-//			if(product!=null){
-				this.sale=new Sale(customer,prods);
-//				this.sale.realTotalPrice(customer);
-//		           pList.get(i-1).setLeftQuantity(this.sale);
-//				System.out.println("Enter the quantity you want to purchase: ");
-//				int q=scan.nextInt();
-//				if(q<=product.getShelfQty()){
-//				}
-//			}
+			sales.add(new Sale(customer,prods));
+			for(int i=0;i<sales.size();i++)
+				this.sale=sales.get(sales.size()-1);
+		}
+	}
+	
+	public void showShoppingList(){
+		if(customer!=null){
+			System.out.println("Customer "+customer.getName()+"'s list: ");
+			for(int i=0;i<sales.size();i++){
+				for(int j=0;j<sales.get(i).list.size();j++){
+					sales.get(i).setID(i+1);
+					System.out.print("Sale "+sales.get(i).getID());
+					sales.get(i).list.get(j).print();
+				}
+			}
 		}
 	}
 	
@@ -152,10 +156,36 @@ public class Market {
 		}
 	}
 	
+	public void remove(){
+		if(employee instanceof SalesStaff){
+			System.out.print("Please enter the target sale ID: ");
+			int i=scan.nextInt();
+			System.out.print("Please enter the product name you want to remove from this shopping: ");
+			String name=scan.next();
+			if(i<sales.size()+1&&i>0)
+			sales.get(i-1).remove(name);
+			else{
+				System.out.println("Invalid sale or name");
+				remove();
+			}
+		}
+	}
+	
 	public void confirm(){
 		if(customer!=null&&sale!=null){
-			
+			System.out.println("Would you confirm to pay your order? Y/N :");
+			String ch=scan.next();
+			if(ch.compareTo("Y")==0||ch.compareTo("y")==0){
+				this.sale.print();
+			}
 		}
+	}
+	
+	public void cancel(){
+		System.out.print("DO YOU WANT TO CANCEL YOUR ORDER? Y/N : ");
+		String ch=scan.next();
+		if(ch.compareTo("Y")==0||ch.compareTo("y")==0)
+		sales.remove(sales.size()-1);
 	}
 	
 	public void addProduct(){
@@ -213,6 +243,50 @@ public class Market {
 		else System.out.println("Not Login Yet Or Invalid User Level.");
 	}
 	
+	public void findMostRevenue(){
+
+		for(int i=0;i<prods.size();i++){
+			if(prods.get(i).totalRevenue>=max)
+			max=prods.get(i).totalRevenue;
+		}
+		for(int i=0;i<prods.size();i++){
+			if(prods.get(i).totalRevenue==max){
+					System.out.println("The product that generated most revenue is "+ prods.get(i).getName()+" and the total revenue is " +max);
+					
+			}
+		}
+	}
+	public void salesReport(double startdate, double enddate){
+		double partialRevenue=0;
+		double salesnum=0;
+		if ( sales.size() == 0)
+	         System.out.println("No current orders");
+	    else {
+		for(int i=0;i<sales.size();i++){
+		if((Math.floor(sales.get(i).ID/1000)>=startdate)&&(Math.floor(sales.get(i).ID)<=enddate))
+		{
+			System.out.println("Sale " + (i + 1));
+	          sales.get(i).print();
+	         partialRevenue+=sales.get(i).realTP;
+			salesnum+=1;
+			 System.out.println("\nPress enter to continue");
+	          scan.nextLine();
+		}
+		System.out.println("total number of sale during this period is "+salesnum);
+		System.out.println("the total revenue during this period is "+partialRevenue);
+		}
+		}
+	}
+	public void supplyReport(){
+		if ( prods.size() == 0)
+	         System.out.println("No current products");
+	    else {
+	    	for(int i=0;i<prods.size();i++){
+	    		System.out.println(prods.get(i).getName()+"   "+prods.get(i).totalOrder);
+	    	}
+	    }
+	}
+	
 	public void custLogin(){
 		int i;
 		System.out.print("Please enter your name: ");
@@ -223,8 +297,11 @@ public class Market {
 			if(custs.get(i).getName().compareTo(name)==0&&custs.get(i).getID()==ID){
 				System.out.println("Welcome "+custs.get(i).getName()+"! Enjoy your shopping!");
 				this.customer=custs.get(i);
+				break;
 			}
-			else System.out.println("Customer name or ID wrong!");
+		}
+		if(i==custs.size()){
+			System.out.println("Username or ID Wrong!");
 		}
 		System.out.println("Please enter to continue.");
 		scan.nextLine();
@@ -240,8 +317,11 @@ public class Market {
 			if(emps.get(i).getName().compareTo(name)==0&&emps.get(i).getPassword().compareTo(password)==0){
 				System.out.println("Welcome "+emps.get(i).getName()+"! Current level is: "+emps.get(i).getClass());
 				this.employee=emps.get(i);
+				break;
 			}
-			else System.out.println("User name or password wrong!");
+		}
+		if(i==emps.size()){
+			System.out.println("Username or Password Wrong!");
 		}
 		System.out.println("Please enter to continue.");
 		scan.nextLine();
@@ -259,25 +339,33 @@ public class Market {
 			case 2 : searchProduct();break;
 			case 3 : searchDiscount();break;
 			case 4 : purchase();break;
-			case 5 : custLogin();break;
-			case 6 : 
+			case 5 : showShoppingList();break;
+			case 6 : custLogin();break;
+			case 8 : confirm();break;
+			case 7 : 
 				do{
+					System.out.println();
 					if(employee==null){
 						System.out.println("Please login as a staff!");
 						login();
 					}
 					if(employee instanceof Manager || employee instanceof WarehouseStaff || employee instanceof SalesStaff)
 						staffMenu();
+					System.out.print("Please enter your choice : ");
 					n=scan.nextInt();
 					switch(n){
 					case 1 : showProduct();break;
 					case 2 : checkProduct();break;
+					case 3 : remove();break;
+					case 4 : cancel();break;
 					case 5 : addShelfLevel();break;
 					case 0 : break;
 					}
+					System.out.println();
 				}while(n!=0);
 				case 0 : break;
 				}
+			System.out.println();
 		}while(m!=0);
 	}
 	

@@ -12,6 +12,10 @@ class Sale
    public int getID(){ 
 	   return ID; 
    }
+   
+   public void setID(int id){
+	   this.ID=id;
+   }
 
    public double getRealTP(){
 	   return realTP;
@@ -43,6 +47,7 @@ class Sale
 
    public Sale(Customer c, ArrayList<Product> pList)
    {    
+	    this.c=c;
         int i;  
         String response;       
         do{
@@ -50,8 +55,6 @@ class Sale
     		for(i=0;i<pList.size();i++){
     			System.out.println("\t"+pList.get(i).getID()+"\t\t"+pList.get(i).getName()+"\t\t"+pList.get(i).getItemPrice()+"\t\t"+pList.get(i).getShelfQty());
     		}
-//        	for(i=0;i<pList.size();i++)
-//        		System.out.println("   "+ (i+1)+ "   "+ pList.get(i).getName());
         	do{      
         		System.out.print("Enter Product ID : ");
         		i=scan.nextInt();
@@ -77,7 +80,7 @@ class Sale
            for(int i=0;i<list.size();i++){
         	   totalPrice+=list.get(i).getPrice();
         	   list.get(i).getProduct().totalRevenue+=list.get(i).getPrice();
-        	   list.get(i).getProduct().setLeftQuantity(this);
+//        	   list.get(i).getProduct().setLeftQuantity(this);
            }
            
 //add price*unitPrice: product.getPrice(); will calculate wholesale price itself
@@ -110,7 +113,5 @@ class Sale
 			}				
 		}
 	}
-//   public void cancel()
-//  
 }
 

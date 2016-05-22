@@ -25,7 +25,6 @@ public class SalesLineItem {
 	}
 
 	public void print(){
-		System.out.printf(
-		"Product name ",product.getName(),"Quantity ",quantity);  
+		System.out.println("\tProduct name:"+product.getName()+"\tQuantity :"+quantity);  
 	}
 }

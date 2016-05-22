@@ -19,14 +19,8 @@ public class Manager extends Employee{
 		p.setDisc(disc);
 	}
 	
-	public void editQuantity(Product p){
-		System.out.println("Please enter the added quantity for item "+p.getName());
-		int qty=n.nextInt();
-	}
-	
 	public void setReplenishLevel(Product p){
 		System.out.println("Please enter the replenish level for item "+p.getName());
 		int qty=n.nextInt();
-
 	}
 }

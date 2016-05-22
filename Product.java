@@ -100,7 +100,7 @@ public class Product {
 	private int replenishLevel=30;
 	private double itemPrice;
 	private double disc;
-	private int totalOrder=0;
+	public int totalOrder=0;
 	private ArrayList<SalesLineItem> salesLines = new ArrayList<SalesLineItem>();
 	private double wholesaleItemPrice;
 	private int wholesaleItemQty;
@@ -276,13 +276,13 @@ public class Product {
 		this.shelfQty-=amount;
 	}
 
-	public void setLeftQuantity(Sale s){
-		double amount;
-		for (int i=0; i<s.list.size(); i++){
-			if(s.list.get(i).getProduct().getID() == ID)
-				{amount=s.list.get(i).quantity;
-				this.setStock(amount);
-				}
-		}
-	}
+//	public void setLeftQuantity(Sale s){
+//		double amount;
+//		for (int i=0; i<s.list.size(); i++){
+//			if(s.list.get(i).getProduct().getID() == ID)
+//				{amount=s.list.get(i).quantity;
+//				this.setStock(amount);
+//				}
+//		}
+//	}
 }
