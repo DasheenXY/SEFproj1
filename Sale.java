@@ -58,7 +58,14 @@ class Sale
            }while(i<1||i>pList.size());
            System.out.print("Enter qty : ");
            int qty=scan.nextInt();
+           if(qty<=pList.get(i-1).getShelfQty()){
            list.add(new SalesLineItem(pList.get(i-1),qty,this));
+           } else{
+        	   	  System.out.println("Not enough quantitie left, try to buy everthing.");
+        	   	  qty=pList.get(i-1).getShelfQty();
+        	   	  list.add(new SalesLineItem(pList.get(i-1),qty,this));
+           		 }
+           pList.get(i-1).setLeftShelfQty(qty);
            scan.nextLine();
            System.out.print("Any more items ? : Y/N");
            response = scan.nextLine();

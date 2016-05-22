@@ -95,7 +95,7 @@ import java.util.*;
 public class Product {
 	private int ID;
 	private String name;
-	public int shelfQty;
+	private int shelfQty;
 	private int stockQty;
 	private int replenishLevel=30;
 	private double itemPrice;
@@ -180,7 +180,7 @@ public class Product {
 		this.disc = disc;
 	}
 
-	public double getShelfQty() {
+	public int getShelfQty() {
 		return shelfQty;
 	}
 
@@ -188,7 +188,7 @@ public class Product {
 		this.shelfQty = shelfQty;
 	}
 
-	public double getStockQty() {
+	public int getStockQty() {
 		return stockQty;
 	}
 
@@ -214,10 +214,6 @@ public class Product {
 
 	public String getName() {
 		return name;
-	}
-
-	public double getQuantity() {
-		return this.stockQty;
 	}
 
 	public void setQuantity(int quantity) {
@@ -275,11 +271,15 @@ public class Product {
 		}
 	}
 
+	public void setLeftShelfQty(int amount){
+		if(this.shelfQty>=amount)
+		this.shelfQty-=amount;
+	}
 
 	public void setLeftQuantity(Sale s){
 		double amount;
 		for (int i=0; i<s.list.size(); i++){
-			if(s.list.get(i).getProduct().getName().compareTo(this.name) == 0)
+			if(s.list.get(i).getProduct().getID() == ID)
 				{amount=s.list.get(i).quantity;
 				this.setStock(amount);
 				}

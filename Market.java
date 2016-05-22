@@ -16,11 +16,12 @@ public class Market {
 		custs.add(new Customer("Ashley",1,100));
 		emps.add(new Manager("Shaun","1","pass"));
 		emps.add(new WarehouseStaff("Ray","007","pass"));
-		prods.add(new Product(1,"Apple",100,2.0));
-		prods.add(new Product(2,"Banana",100,1.5));
-		prods.add(new Product(3,"Coke",200,1.8));
+		emps.add(new SalesStaff("Bob","3","pass"));
+		prods.add(new Product(1,"Apple",10000,2.0));
+		prods.add(new Product(2,"Banana",10000,1.5));
+		prods.add(new Product(3,"Coke",20000,1.8));
 		for(int i=0;i<prods.size();i++){
-			prods.get(i).setShelfQty(80);
+			prods.get(i).setShelfQty(2000);
 		}
 	}
 	
@@ -65,8 +66,9 @@ public class Market {
 		System.out.println("\t2.Show Products' Number In Warehouse");
 		System.out.println("\t3.Remove Items");
 		System.out.println("\t4.Cancellation");
-		System.out.println("\t5.Set Replenish Stoke Level On Shelve");
-		System.out.println("\t6.Print Current Sale Report");
+		System.out.println("\t5.Add Shelf Level");
+		System.out.println("\t6.Set Replenish Stoke Level On Shelve");
+		System.out.println("\t7.Print Current Sale Report");
 		System.out.println("\t0.Back To Last Menu");
 	}
 	
@@ -74,6 +76,13 @@ public class Market {
 		System.out.println("\tProduct ID\tProduct Name\tUnit Price\tQuantity Left");
 		for(int i=0;i<prods.size();i++){
 			System.out.println("\t"+prods.get(i).getID()+"\t\t"+prods.get(i).getName()+"\t\t"+prods.get(i).getItemPrice()+"\t\t"+prods.get(i).getShelfQty());
+		}
+	}
+	
+	public void checkProduct(){
+		System.out.println("\tProduct ID\tProduct Name\tUnit Price\tQuantity Left");
+		for(int i=0;i<prods.size();i++){
+			System.out.println("\t"+prods.get(i).getID()+"\t\t"+prods.get(i).getName()+"\t\t"+prods.get(i).getItemPrice()+"\t\t"+prods.get(i).getStockQty());
 		}
 	}
 	
@@ -109,7 +118,7 @@ public class Market {
 	
 	public void purchase(){
 		if(customer!=null){
-//			System.out.print("Enter the product ID you want to purchse : ");
+			System.out.print("Enter the product ID you want to purchse : ");
 //			int i=scan.nextInt();
 //			for(int j=0;j<prods.size();j++){
 //				if(i<=prods.size()&&i!=0){
@@ -118,13 +127,28 @@ public class Market {
 //			}
 //			if(product!=null){
 				this.sale=new Sale(customer,prods);
-				this.sale.realTotalPrice(customer);
+//				this.sale.realTotalPrice(customer);
 //		           pList.get(i-1).setLeftQuantity(this.sale);
 //				System.out.println("Enter the quantity you want to purchase: ");
 //				int q=scan.nextInt();
 //				if(q<=product.getShelfQty()){
 //				}
 //			}
+		}
+	}
+	
+	public void addShelfLevel(){
+		if(employee instanceof Manager || employee instanceof SalesStaff){
+			System.out.print("Please enter the product id : ");
+			int n=scan.nextInt();
+			if(n<=prods.size()){
+				System.out.print("Please enter the qty you want to add into shelf :");
+				int m=scan.nextInt();
+				if(m<=prods.get(n-1).getStockQty()){
+					prods.get(n-1).setShelfQty(prods.get(n-1).getShelfQty()+m);
+					prods.get(n-1).setStockQty(prods.get(n-1).getStockQty()-m);
+				}
+			}
 		}
 	}
 	
@@ -237,14 +261,21 @@ public class Market {
 			case 4 : purchase();break;
 			case 5 : custLogin();break;
 			case 6 : 
-				login();
-				if(employee instanceof Manager || employee instanceof WarehouseStaff)
-				staffMenu();
-				n=scan.nextInt();
-				switch(n){
-				case 1 : showProduct();break;
-				case 2 : break;
-				}
+				do{
+					if(employee==null){
+						System.out.println("Please login as a staff!");
+						login();
+					}
+					if(employee instanceof Manager || employee instanceof WarehouseStaff || employee instanceof SalesStaff)
+						staffMenu();
+					n=scan.nextInt();
+					switch(n){
+					case 1 : showProduct();break;
+					case 2 : checkProduct();break;
+					case 5 : addShelfLevel();break;
+					case 0 : break;
+					}
+				}while(n!=0);
 				case 0 : break;
 				}
 		}while(m!=0);
