@@ -66,14 +66,21 @@ public class Market {
 	
 	public void staffMenu(){
 		System.out.println("\t===Staff Operation System===");
-		System.out.println("\t1.Show Products' Number On Shelve");
-		System.out.println("\t2.Show Products' Number In Warehouse");
+		System.out.println("\t1.Show Products' Quantity On Shelve");
+		System.out.println("\t2.Show Products' Quantity In Warehouse");
 		System.out.println("\t3.Remove Buying Items");
 		System.out.println("\t4.Cancellation");
 		System.out.println("\t5.Add Shelf Level");
 		System.out.println("\t6.Set Replenish Stoke Level On Shelve");
 		System.out.println("\t7.Print Current Sale Report");
+		System.out.println("\t9.Edit Product Details");
 		System.out.println("\t0.Back To Last Menu");
+	}
+	
+	public void recharge(){
+			System.out.print("Please enter the amount you want to charge: ");
+			double amt=scan.nextDouble();
+			customer.setBalance(customer.getBalance()+amt);
 	}
 	
 	public void showProduct(){
@@ -92,14 +99,35 @@ public class Market {
 	
 	public void searchProduct(){
 		if(customer!=null){
-			System.out.print("Enter the product ID: ");
-			int i=scan.nextInt();
-			for(int j=0;j<prods.size();j++){
-				if(prods.get(j).getID()==i){
-					System.out.println("\tProduct ID\tProduct Name\tUnit Price\tQuantity Left");
-					System.out.println("\t"+prods.get(i-1).getID()+"\t\t"+prods.get(i-1).getName()+"\t\t"+prods.get(i-1).getItemPrice()+"\t\t"+prods.get(i-1).getShelfQty());
+			System.out.print("Which type do you want to search by?\n");
+			System.out.print("1.Product ID\n");
+			System.out.print("2.Product Name\n");
+			System.out.print("Please enter your choice: ");
+			int n=scan.nextInt();
+			switch(n){
+			case 1 : 
+				System.out.print("Enter the product ID: ");
+				int i=scan.nextInt();
+				for(int j=0;j<prods.size();j++){
+					if(prods.get(j).getID()==i){
+						System.out.println("\tProduct ID\tProduct Name\tUnit Price\tQuantity Left");
+						System.out.println("\t"+prods.get(i-1).getID()+"\t\t"+prods.get(i-1).getName()+"\t\t"+prods.get(i-1).getItemPrice()+"\t\t"+prods.get(i-1).getShelfQty());
+					}
 				}
+				break;
+			case 2 :
+				System.out.print("Enter the product Name: ");
+				String nm=scan.next();
+				for(int j=0;j<prods.size();j++){
+					if(prods.get(j).getName().compareTo(nm)==0){
+						System.out.println("\tProduct ID\tProduct Name\tUnit Price\tQuantity Left");
+						System.out.println("\t"+prods.get(j).getID()+"\t\t"+prods.get(j).getName()+"\t\t"+prods.get(j).getItemPrice()+"\t\t"+prods.get(j).getShelfQty());
+					}
+				}
+				break;
+				
 			}
+			
 		}
 		else System.out.println("Please Login in first dear customer.");
 	}
@@ -176,7 +204,8 @@ public class Market {
 			System.out.println("Would you confirm to pay your order? Y/N :");
 			String ch=scan.next();
 			if(ch.compareTo("Y")==0||ch.compareTo("y")==0){
-				this.sale.print();
+				this.sale.realTotalPrice(customer);
+				System.out.println("Total price: "+sale.getTotalPrice());
 			}
 		}
 	}
@@ -215,6 +244,8 @@ public class Market {
 			System.out.println("Please choose what you want to edit");
 			System.out.println("1.Edit Product Price");
 			System.out.println("2.Edit Product Discount Rate");
+			System.out.println("3.Set Product Whole Sale Quantity");
+			System.out.println("4.Set Product Whole Sale Price");
 			System.out.print("Enter your choice");
 			int a=scan.nextInt();
 			switch (a){
@@ -238,13 +269,44 @@ public class Market {
 				}
 				((Manager) employee).editRate(product);
 				break;
+			case 3 :
+				System.out.print("Please enter product name: ");
+				name=scan.next();
+				for(int i=0;i<prods.size();i++){
+					if(prods.get(i).getName().compareTo(name)==0){
+						this.product=prods.get(i);
+					}
+				}
+				setWholeSaleQty();
+				break;
+			case 4 :
+				System.out.print("Please enter product name: ");
+				name=scan.next();
+				for(int i=0;i<prods.size();i++){
+					if(prods.get(i).getName().compareTo(name)==0){
+						this.product=prods.get(i);
+					}
+				}
+				setWholeSalePrice();
+				break;
 			}
 		}
 		else System.out.println("Not Login Yet Or Invalid User Level.");
 	}
 	
+	public void setWholeSaleQty(){
+		System.out.print("Please enter the whole sale quantity: ");
+		int n=scan.nextInt();
+		product.setWholesaleItemQty(n);
+	}
+	
+	public void setWholeSalePrice(){
+		System.out.print("Please enter the whole sale price: ");
+		double n=scan.nextDouble();
+		product.setWholesaleItemPrice(n);
+	}
+	
 	public void findMostRevenue(){
-
 		for(int i=0;i<prods.size();i++){
 			if(prods.get(i).totalRevenue>=max)
 			max=prods.get(i).totalRevenue;
@@ -252,10 +314,10 @@ public class Market {
 		for(int i=0;i<prods.size();i++){
 			if(prods.get(i).totalRevenue==max){
 					System.out.println("The product that generated most revenue is "+ prods.get(i).getName()+" and the total revenue is " +max);
-					
 			}
 		}
 	}
+	
 	public void salesReport(double startdate, double enddate){
 		double partialRevenue=0;
 		double salesnum=0;
@@ -340,7 +402,17 @@ public class Market {
 			case 3 : searchDiscount();break;
 			case 4 : purchase();break;
 			case 5 : showShoppingList();break;
-			case 6 : custLogin();break;
+			case 6 :
+				custLogin();
+				if(customer!=null){
+					System.out.println("Your current balance is: $"+customer.getBalance());
+					System.out.print("Do you want to charge your balance? Y/N :");
+					String ch=scan.next();
+					if(ch.compareTo("y")==0||ch.compareTo("Y")==0){
+						recharge();
+					}
+				}
+				break;
 			case 8 : confirm();break;
 			case 7 : 
 				do{
@@ -359,6 +431,7 @@ public class Market {
 					case 3 : remove();break;
 					case 4 : cancel();break;
 					case 5 : addShelfLevel();break;
+					case 9 : edit();break;
 					case 0 : break;
 					}
 					System.out.println();
