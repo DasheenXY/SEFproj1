@@ -27,7 +27,7 @@ class Sale
 
    public void print()
    {
-//      computeTotalPrice();
+      computeTotalPrice();
       System.out.printf("%-20s %-20s\n","ID",ID);
       System.out.printf("%-20s %-20s\n","Customer",c.getName());
       for (int i=0; i<list.size(); i++)        

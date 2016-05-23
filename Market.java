@@ -73,11 +73,10 @@ public class Market {
 		System.out.println("\t3.Remove Buying Items");
 		System.out.println("\t4.Cancellation");
 		System.out.println("\t5.Add Shelf Level");
-		System.out.println("\t6.Set Replenish Stoke Level On Shelve");
-		System.out.println("\t7.Print Current Sale Report");
-		System.out.println("\t8.Print Most Revenue Sale");
-		System.out.println("\t9.Edit Product Details");
-		System.out.println("\t10.Add New Product To Warehouse");
+		System.out.println("\t6.Print Current Sale Report");
+		System.out.println("\t7.Print Most Revenue Sale");
+		System.out.println("\t8.Edit Product Details");
+		System.out.println("\t9.Add New Product To Warehouse");
 		System.out.println("\t0.Back To Last Menu");
 	}
 	
@@ -161,19 +160,20 @@ public class Market {
 	}
 	
 	public void purchase(){
-		if(customer!=null){
+		if(customer!=null&&sale==null){
 			sales.add(new Sale(customer,prods));
 			for(int i=0;i<sales.size();i++)
 				this.sale=sales.get(sales.size()-1);
 		}
+		else System.out.println("Please login or pay your bill at first!");
 	}
 	
 	public void showShoppingList(){
 		if(customer!=null){
 			System.out.println("Customer "+customer.getName()+"'s list: ");
 			for(int i=0;i<sales.size();i++){
+				sales.get(i).setID(i+1);
 				for(int j=0;j<sales.get(i).list.size();j++){
-					sales.get(i).setID(i+1);
 					System.out.print("Sale "+sales.get(i).getID());
 					sales.get(i).list.get(j).print();
 				}
@@ -222,7 +222,7 @@ public class Market {
 			if(ch.compareTo("Y")==0||ch.compareTo("y")==0){
 				this.sale.realTotalPrice(customer);
 				if(customer.getBalance()>=this.sale.realTP){
-					System.out.println("Total price: "+sale.getTotalPrice());
+					System.out.println("Total price: "+sale.realTP);
 					customer.setBalance(customer.getBalance()-this.sale.realTP);
 					customer.setLoyaltyPoint(sale);
 					this.sale=null;
@@ -468,15 +468,15 @@ public class Market {
 					case 3 : remove();break;
 					case 4 : cancel();break;
 					case 5 : addShelfLevel();break;
-					case 7 : 
+					case 6 : 
 						System.out.print("Enter startdate and enddate(DDMMYYYY DDMMYYYY):");
 						double sd=scan.nextDouble();
 						double ed=scan.nextDouble();
 						salesReport(sd,ed);
 						break;
-					case 8 : findMostRevenue();break;
-					case 9 : edit();break;
-					case 10: addProduct();break;
+					case 7 : findMostRevenue();break;
+					case 8 : edit();break;
+					case 9 : addProduct();break;
 					case 0 : 
 						this.employee=null;
 						break;

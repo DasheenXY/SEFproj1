@@ -6,7 +6,7 @@ public class Product {
 	private String name;
 	private int shelfQty;
 	private int stockQty;
-	private int replenishLevel=30;
+	private int replenishLevel;
 	private double itemPrice;
 	private double disc;
 	public int totalOrder=0;
@@ -42,29 +42,35 @@ public class Product {
 		this.replenishLevel=qty;
 		return replenishLevel;
 	}
-	public void setStock(int amount1){
-		{
-			double amount=amount1;
-			Scanner reader=new Scanner(System.in);
-			do{     
-				System.out.println("Not enough items on shelf, current total amount is "+ this.shelfQty);
-				amount=reader.nextDouble();
-//			else{	
-//			System.out.println("There are not enough items left, try to buy all items");
-//			shelfQty=0;
-			}while(amount>shelfQty);
-			this.shelfQty -= amount;
-			if(this.shelfQty==0){
-				this.shelfQty=100;
-				this.stockQty-=100;
-			}
-			if(this.stockQty<=200){
-				System.out.println("stock level low, reorder now, current stock amount is "+ this.stockQty);
-				this.reorder(800);//automatically reorder if below 200 and replenish the stock to 1000
-			}
-		}
-	}
+//	public void setStock(int amount1){
+//		{
+//			double amount=amount1;
+//			Scanner reader=new Scanner(System.in);
+//			do{     
+//				System.out.println("Not enough items on shelf, current total amount is "+ this.shelfQty);
+//				amount=reader.nextDouble();
+////			else{	
+////			System.out.println("There are not enough items left, try to buy all items");
+////			shelfQty=0;
+//			}while(amount>shelfQty);
+//			this.shelfQty -= amount;
+//			if(this.shelfQty==0){
+//				this.shelfQty=100;
+//				this.stockQty-=100;
+//			}
+//			if(this.stockQty<=200){
+//				System.out.println("stock level low, reorder now, current stock amount is "+ this.stockQty);
+//				this.reorder(800);//automatically reorder if below 200 and replenish the stock to 1000
+//			}
+//		}
+//	}
 
+	public void setStock(){
+		if(this.stockQty<this.replenishLevel){
+			this.setStockQty(this.stockQty+this.replenishLevel);
+			System.out.println("Stock level low, reorder now, current stock amount is : "+this.stockQty);
+		}else System.out.println("Please notice that current stock amount is: "+this.stockQty+". If stock amount is less than "+this.replenishLevel+" this product would be relenish automatically.");
+	}
 	
 	public void generateQty(){
 		if(shelfQty<replenishLevel&&stockQty+shelfQty>=replenishLevel){
