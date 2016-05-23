@@ -232,9 +232,16 @@ public class Market {
 	public void cancel(){
 		System.out.print("DO YOU WANT TO CANCEL YOUR ORDER? Y/N : ");
 		String ch=scan.next();
-		if(ch.compareTo("Y")==0||ch.compareTo("y")==0)
-		sales.remove(sales.size()-1);
-	}
+			if(ch.compareTo("Y")==0||ch.compareTo("y")==0){
+				for(int i=0;i<sale.list.size();i++){
+					sale.list.get(i).getProduct().setShelfQty(sale.list.get(i).getProduct().getShelfQty()+sale.list.get(i).quantity);
+				}
+//				for(int i=0;i<sales.get(sales.size()-1).list.size();i++)
+//					sales.get(sales.size()-1).list.get(i).getProduct().setShelfQty(sales.get(sales.size()-1).list.get(i).getProduct().getShelfQty()+sales.get(sales.size()-1).list.get(i).quantity);
+				sales.remove(sales.size()-1);
+				this.sale=null;
+			}
+		}
 	
 	public void addProduct(){
 		boolean test;
