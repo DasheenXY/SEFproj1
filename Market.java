@@ -24,6 +24,7 @@ public class Market {
 		prods.add(new Product(3,"Coke",20000,1.8));
 		for(int i=0;i<prods.size();i++){
 			prods.get(i).setShelfQty(2000);
+			prods.get(i).setWholesaleItemQty(2000);
 		}
 	}
 	
@@ -58,7 +59,7 @@ public class Market {
 		System.out.println("\t3.Search Unit Price In Bulk");
 		System.out.println("\t4.Purchase Products(Shopping)");
 		System.out.println("\t5.Show Shopping List");
-		System.out.println("\t6.Customer Login");
+		System.out.println("\t6.Customer Login And Charge Account");
 		System.out.println("\t7.Staff Options");
 		System.out.println("\t8.Confirm shopping");
 		System.out.println("\t9.Show Your Current Points and Balance");
@@ -66,7 +67,7 @@ public class Market {
 	}
 	
 	public void staffMenu(){
-		System.out.println("\t===Staff Operation System===");
+		System.out.println("\t========Staff Operation System========");
 		System.out.println("\t1.Show Products' Quantity On Shelve");
 		System.out.println("\t2.Show Products' Quantity In Warehouse");
 		System.out.println("\t3.Remove Buying Items");
@@ -148,7 +149,7 @@ public class Market {
 			int i=scan.nextInt();
 			for(int j=0;j<prods.size();j++){
 				if(prods.get(j).getID()==i){
-					System.out.print("If your purchasing quantities greater than 10 : ");
+					System.out.println("If your purchasing quantities greater than "+prods.get(i-1).getWholesaleItemQty()+" : ");
 					System.out.print("The product "+prods.get(i-1).getName()+" will have a "+(float)(1-prods.get(i-1).getDisc())*100+"% discount.");
 				}else if(i>prods.size()){
 					System.out.println("Product ID "+(i-1)+" doesn't exsit. Please enter again.");
@@ -218,6 +219,7 @@ public class Market {
 				if(customer.getBalance()>this.sale.realTP){
 					System.out.println("Total price: "+sale.getTotalPrice());
 					customer.setBalance(customer.getBalance()-this.sale.realTP);
+					customer.setLoyaltyPoint(sale);
 				}
 				else{
 					System.out.println("Your balance is not enough, please recharge at first.");
