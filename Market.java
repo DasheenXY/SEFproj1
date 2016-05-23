@@ -74,6 +74,7 @@ public class Market {
 		System.out.println("\t5.Add Shelf Level");
 		System.out.println("\t6.Set Replenish Stoke Level On Shelve");
 		System.out.println("\t7.Print Current Sale Report");
+		System.out.println("\t8.Print Most Revenue Sale");
 		System.out.println("\t9.Edit Product Details");
 		System.out.println("\t0.Back To Last Menu");
 	}
@@ -448,6 +449,13 @@ public class Market {
 					case 3 : remove();break;
 					case 4 : cancel();break;
 					case 5 : addShelfLevel();break;
+					case 7 : 
+						System.out.print("Enter startdate and enddate(DDMMYYYY DDMMYYYY):");
+						double sd=scan.nextDouble();
+						double ed=scan.nextDouble();
+						salesReport(sd,ed);
+						break;
+					case 8 : findMostRevenue();break;
 					case 9 : edit();break;
 					case 0 : break;
 					}
