@@ -179,6 +179,7 @@ public class Market {
 				}
 			}
 		}
+		else System.out.println("Please Login in first dear customer.");
 	}
 	
 	public void addShelfLevel(){
@@ -192,8 +193,10 @@ public class Market {
 					prods.get(n-1).setShelfQty(prods.get(n-1).getShelfQty()+m);
 					prods.get(n-1).setStockQty(prods.get(n-1).getStockQty()-m);
 				}
+				prods.get(n-1).setStock();
 			}
 		}
+		else System.out.println("Invalid staff level. Please login again.");
 	}
 	
 	public void remove(){
@@ -209,6 +212,7 @@ public class Market {
 				remove();
 			}
 		}
+		else System.out.println("You are not a sales staff. Please login as a sales staff.");
 	}
 	
 	public void confirm(){
@@ -221,27 +225,32 @@ public class Market {
 					System.out.println("Total price: "+sale.getTotalPrice());
 					customer.setBalance(customer.getBalance()-this.sale.realTP);
 					customer.setLoyaltyPoint(sale);
+					this.sale=null;
 				}
 				else{
 					System.out.println("Your balance is not enough, please recharge at first.");
 				}
-			}else{
-				sales.remove(sales.get(sales.size()-1));
-				this.sale=null;
 			}
+//			else{
+//				sales.remove(sales.get(sales.size()-1));
+//				this.sale=null;
+//			}
 		}
 	}
 	
 	public void cancel(){
-		System.out.print("DO YOU WANT TO CANCEL YOUR ORDER? Y/N : ");
-		String ch=scan.next();
-			if(ch.compareTo("Y")==0||ch.compareTo("y")==0){
-				for(int i=0;i<sale.list.size();i++){
-					sale.list.get(i).getProduct().setShelfQty(sale.list.get(i).getProduct().getShelfQty()+sale.list.get(i).quantity);
+		if(this.sale!=null){
+			System.out.print("DO YOU WANT TO CANCEL YOUR ORDER? Y/N : ");
+			String ch=scan.next();
+				if(ch.compareTo("Y")==0||ch.compareTo("y")==0){
+					for(int i=0;i<sale.list.size();i++){
+						sale.list.get(i).getProduct().setShelfQty(sale.list.get(i).getProduct().getShelfQty()+sale.list.get(i).quantity);
+					}
+					sales.remove(sales.size()-1);
+					this.sale=null;
 				}
-				sales.remove(sales.size()-1);
-				this.sale=null;
 			}
+		else System.out.println("There is no current purchasing. Keep shopping!");
 		}
 	
 	public void addProduct(){
@@ -264,7 +273,8 @@ public class Market {
 			System.out.println("2.Edit Product Discount Rate");
 			System.out.println("3.Set Product Whole Sale Quantity");
 			System.out.println("4.Set Product Whole Sale Price");
-			System.out.print("Enter your choice");
+			System.out.println("5.Set Product Replenish Level In Warehouse");
+			System.out.print("Enter your choice: ");
 			int a=scan.nextInt();
 			switch (a){
 			case 1 : 
@@ -306,6 +316,16 @@ public class Market {
 					}
 				}
 				setWholeSalePrice();
+				break;
+			case 5 :
+				System.out.print("Please enter product name: ");
+				name=scan.next();
+				for(int i=0;i<prods.size();i++){
+					if(prods.get(i).getName().compareTo(name)==0){
+						this.product=prods.get(i);
+					}
+				}
+				((Manager) employee).setReplenishLevel(product);
 				break;
 			}
 		}
