@@ -77,6 +77,7 @@ public class Market {
 		System.out.println("\t7.Print Current Sale Report");
 		System.out.println("\t8.Print Most Revenue Sale");
 		System.out.println("\t9.Edit Product Details");
+		System.out.println("\t10.Add New Product To Warehouse");
 		System.out.println("\t0.Back To Last Menu");
 	}
 	
@@ -216,7 +217,7 @@ public class Market {
 			String ch=scan.next();
 			if(ch.compareTo("Y")==0||ch.compareTo("y")==0){
 				this.sale.realTotalPrice(customer);
-				if(customer.getBalance()>this.sale.realTP){
+				if(customer.getBalance()>=this.sale.realTP){
 					System.out.println("Total price: "+sale.getTotalPrice());
 					customer.setBalance(customer.getBalance()-this.sale.realTP);
 					customer.setLoyaltyPoint(sale);
@@ -238,33 +239,22 @@ public class Market {
 				for(int i=0;i<sale.list.size();i++){
 					sale.list.get(i).getProduct().setShelfQty(sale.list.get(i).getProduct().getShelfQty()+sale.list.get(i).quantity);
 				}
-//				for(int i=0;i<sales.get(sales.size()-1).list.size();i++)
-//					sales.get(sales.size()-1).list.get(i).getProduct().setShelfQty(sales.get(sales.size()-1).list.get(i).getProduct().getShelfQty()+sales.get(sales.size()-1).list.get(i).quantity);
 				sales.remove(sales.size()-1);
 				this.sale=null;
 			}
 		}
 	
 	public void addProduct(){
-		boolean test;
-		System.out.print("Please enter new item ID: ");
-		int ID=scan.nextInt();
-		System.out.print("Please enter new item name: ");
-		String name=scan.next();
-		System.out.print("Please enter new item quantity: ");
-		int qty=scan.nextInt();
-		System.out.print("Please enter new item unit price: ");
-		double unitPrice=scan.nextDouble();
-		do{
-			for(int i=0;i<prods.size();i++){
-				if(ID==prods.get(i).getID()){
-					System.out.print("Product ID exsits, Please enter again: ");
-					ID=scan.nextInt();
-					test=false;
-				}
-			}
-		}while(test=false);
-		prods.add(new Product(ID,name,qty,unitPrice));
+		if(employee instanceof Manager||employee instanceof WarehouseStaff){
+			System.out.print("Please enter new item name: ");
+			String name=scan.next();
+			System.out.print("Please enter new item quantity: ");
+			int qty=scan.nextInt();
+			System.out.print("Please enter new item unit price: ");
+			double unitPrice=scan.nextDouble();
+			int id=prods.size()+1;
+			prods.add(new Product(id,name,qty,unitPrice));
+		}else System.out.println("Invalid employee level! Please login as Manager or Warehouse Staff!");
 	}
 	
 	public void edit(){
@@ -466,10 +456,14 @@ public class Market {
 						break;
 					case 8 : findMostRevenue();break;
 					case 9 : edit();break;
-					case 0 : break;
+					case 10: addProduct();break;
+					case 0 : 
+						this.employee=null;
+						break;
 					}
 					System.out.println();
 				}while(n!=0);
+				break;
 			case 8 : confirm();break;
 			case 9 : custInfo();break;
 				case 0 : break;
