@@ -23,4 +23,5 @@ public class Manager extends Employee{
 		System.out.println("Please enter the replenish level for item "+p.getName());
 		int qty=n.nextInt();
 	}
+	
 }
